@@ -1,3 +1,6 @@
 venv/
 .pytest_cache/
 .idea/
+=======
+"venv/" 
+

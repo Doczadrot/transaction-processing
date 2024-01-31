@@ -15,6 +15,6 @@ def process_transactions(file_path):
         print("\n")
 
 if __name__ == "__main__":
-    file_path = "C:/Users/ivani/Downloads/operations (1).json"
+    # Измените путь к файлу на вашем компьютере
+    file_path = r"C:\Users\ivani\OneDrive\Рабочий стол\Гладченко И Г\operations (1).json"
     process_transactions(file_path)
-

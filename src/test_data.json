@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "date": "2024-01-20T00:00:00.000",
+        "state": "EXECUTED",
+        "operationAmount": {
+            "amount": 100.0,
+            "currency": {"name": "USD", "code": "USD"}
+        },
+        "description": "Payment",
+        "from": "A",
+        "to": "B"
+    },
+    {
+        "id": 2,
+        "date": "2024-01-21T00:00:00.000",
+        "state": "CANCELED",
+        "operationAmount": {
+            "amount": 50.0,
+            "currency": {"name": "USD", "code": "USD"}
+        },
+        "description": "Refund",
+        "from": "C",
+        "to": "D"
+    },
+    {
+        "id": 3,
+        "date": "2024-01-22T00:00:00.000",
+        "state": "EXECUTED",
+        "operationAmount": {
+            "amount": 200.0,
+            "currency": {"name": "EUR", "code": "EUR"}
+        },
+        "description": "Purchase",
+        "from": "E",
+        "to": "F"
+    },
+    {
+        "id": 4,
+        "date": "2024-01-23T00:00:00.000",
+        "state": "EXECUTED",
+        "operationAmount": {
+            "amount": 150.0,
+            "currency": {"name": "USD", "code": "USD"}
+        },
+        "description": "Payment",
+        "from": "G",
+        "to": "H"
+    }
+]

@@ -28,3 +28,10 @@ def test_mask_account_number(account_number, expected_masked_number):
 ])
 def test_format_date(date_str, expected_formatted_date):
     assert format_date(date_str) == expected_formatted_date
+
+def test_mask_card_number_long():
+    assert mask_card_number("Visa 12345678123456789012") == "Visa 1234 ******** **** 9012"
+
+
+def test_mask_account_number_invalid_format():
+    assert mask_account_number("Invalid Account Number") == "N/A"

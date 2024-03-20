@@ -18,10 +18,11 @@ def mask_card_number(card_info):
     return "N/A"
 
 def mask_account_number(account_number):
-    # Маскировка номера счета, оставляем последние 4 цифры
+    # Проверяем, что номер счета не является пустой строкой и его длина больше или равна 4
     if account_number and len(account_number) >= 4:
         return f"**{account_number[-4:]}"
-    return "N/A"
+    else:
+        return "N/A"
 
 def format_date(date_str):
     # Попробуем распарсить дату, если возможно

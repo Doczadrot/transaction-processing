@@ -1,27 +1,44 @@
 import json
 from datetime import datetime
+import re
+
+def get_digits(info):
+    """returns digits from sting"""
+    mask = re.compile(r"\d+") # регулярка для цифр в строке
+    digits = "".join(mask.findall(info)) # применяем регулярку и ищем все цифры в строке
+    return digits.strip()
+
+def clean_up_digits(info):
+    """remove all digits from the string"""
+    for i in range(10): # удаляем все цифры из строки с card_info
+        info = info.replace(str(i), "")
+    return info.strip()
 
 def mask_card_number(card_info):
-    # Разделяем название карты и номер
-    card_parts = card_info.split()
-    if len(card_parts) < 2:
+    digits = get_digits(card_info)
+    if len(digits) < 12: # дропаем слишком короткие карточки
         return "N/A"
+    card_info = clean_up_digits(card_info)
+    blocks = [digits[i:i+4] for i in range(0, len(digits), 4)] # разделяем цифры на группы по 4, хз, по идеи номер карточки тоже должен быть кратным 4, но ни в тестах, ни в тз об этом не сказано
 
-    # Записываем название карты полностью
-    card_type = ' '.join(card_parts[:-1])
+    blocks[1] = blocks[1][:2]+"**" # закрываем вторую четвурку чисел
+    for i in range(2, len(blocks)-1): # заменяем блоки со второго по предпоследний звездочками
+        blocks[i] = "****"
+    blocks_str = " ".join(blocks) # соединяем в строку все цифры
+    card = f"{card_info} {blocks_str}"
+    return card
 
-    # Маскируем номер карты
-    card_number = ''.join(filter(str.isdigit, card_parts[-1]))  # Удаляем все нецифровые символы
-    if len(card_number) >= 12:
-        masked_digits = '*' * (len(card_number) - 8)
-        masked_number = card_number[:4] + ' ' + masked_digits[:4] + ' ' + masked_digits[4:] + ' ' + card_number[-4:]
-        return f"{card_type} {masked_number}"
-    return "N/A"
 
 def mask_account_number(account_number):
     # Проверяем, что номер счета не является пустой строкой, его длина больше или равна 4, и он содержит только цифры
-    if account_number and len(account_number) >= 4 and account_number.isdigit():
-        return f"**{account_number[-4:]}"
+    digits = get_digits(account_number)
+    info = clean_up_digits(account_number)
+    filler = "*"*(len(digits)-4)
+    if digits and len(digits) > 4:
+        if info:
+            return f"{info} {filler}{digits[-4:]}"
+        else:
+            return f"{filler}{digits[-4:]}"
     else:
         return "N/A"
 
@@ -45,18 +62,18 @@ def process_transactions(file_path):
     for transaction in sorted_transactions:
         date = format_date(transaction.get('date'))
         description = transaction.get('description', "N/A")
-        from_account = transaction.get('from', "N/A")
-        to_account = transaction.get('to', "N/A")
+        from_account = transaction.get('from')
+        to_account = transaction.get('to')
         amount = transaction.get('operationAmount', {}).get('amount', "N/A")
         currency = transaction.get('operationAmount', {}).get('currency', {}).get('name', "N/A")
 
         # Маскировка номеров счетов и карт
-        masked_from_account = mask_card_number(from_account) if 'from' in transaction else mask_account_number(from_account)
-        masked_to_account = mask_account_number(to_account)
+        masked_from_account = mask_card_number(from_account) if from_account else "N/A"
+        masked_to_account = mask_account_number(to_account) if to_account else "N/A"
 
         # Вывод транзакции
         print(f"{date} {description}")
-        print(f"{masked_from_account} -> Счет {masked_to_account}")
+        print(f"{masked_from_account} -> {masked_to_account}")
         print(f"{amount} {currency}")
         print()  # Пустая строка для разделения операций
 

@@ -15,8 +15,8 @@ def test_mask_account_number_invalid_format(account_number, expected):
 @pytest.mark.parametrize("card_info, expected_masked_number", [
     ("Visa 1234567812345678", "Visa 1234 56** **** 5678"),
     ("MasterCard 9876543210987654", "MasterCard 9876 54** **** 7654"),
-    ("", "N/A"),
-    ("American Express 12345678", "N/A"),  # Номер карты слишком короткий
+    ("", "N/A"),  # Тест на пустую строку
+    ("American Express 12345678", "N/A"),  # Тест на неизвестный тип карты
 ])
 def test_mask_card_number(card_info, expected_masked_number):
     assert mask_card_number(card_info) == expected_masked_number

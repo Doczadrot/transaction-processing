@@ -58,25 +58,3 @@ def test_get_digits(info, expected_info):
 ])
 def test_clean_up_digits(info, expected_info):
     assert clean_up_digits(info) == expected_info
-
-    # Тесты для строки 54-78
-    @pytest.mark.parametrize("card_info, expected_masked_number", [
-        ("Visa 1234567812345678", "Visa 1234 56** **** 5678"),  # Корректная Visa карта
-        ("MasterCard 9876543210987654", "MasterCard 9876 54** **** 7654"),  # Корректная MasterCard карта
-        ("", "N/A"),  # Пустая строка
-        ("American Express 12345678", "N/A"),  # Неизвестный тип карты
-    ])
-    def test_mask_card_number(card_info, expected_masked_number):
-        assert mask_card_number(card_info) == expected_masked_number
-
-    # Тесты для строк 81-82
-    @pytest.mark.parametrize("info, expected_info", [
-        ("", ""),  # Пустая строка
-        ("124", ""),  # Строка только с цифрами
-        ("1a4", "a"),  # Строка с буквами и цифрами
-        ("abc", "abc"),  # Строка только с буквами
-        ("abc def", "abc def"),  # Строка с буквами и пробелами
-    ])
-    def test_clean_up_digits(info, expected_info):
-        assert clean_up_digits(info) == expected_info
-

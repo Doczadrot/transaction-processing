@@ -32,15 +32,13 @@ def mask_card_number(card_info):
 def mask_account_number(account_number):
     # Проверяем, что номер счета не является пустой строкой, его длина больше или равна 4, и он содержит только цифры
     digits = get_digits(account_number)
-    info = clean_up_digits(account_number)
-    filler = "*"*(len(digits)-4)
-    if digits and len(digits) > 4:
-        if info:
-            return f"{info} {filler}{digits[-4:]}"
-        else:
-            return f"{filler}{digits[-4:]}"
-    else:
+    if len(digits) < 4:
         return "N/A"
+
+    info = clean_up_digits(account_number)
+    masked_number = f"{info} **{digits[-4:]}" if info else f"**{digits[-4:]}"
+
+    return masked_number
 
 def format_date(date_str):
     # Попробуем распарсить дату, если возможно

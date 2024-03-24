@@ -1,17 +1,15 @@
-import json
 import pytest
 from main import mask_card_number, mask_account_number, format_date, get_digits, clean_up_digits
 
 # Тесты для функции mask_account_number
-
 @pytest.mark.parametrize("account_number, expected", [
     ("Invalid Account Number", "N/A"),  # Некорректный номер счета
-    ("1234", "N/A"),  # Слишком короткий номер счета
-    ("12345", "*2345"),  # Корректный номер счета
-    ("Account 12345", "Account *2345"),  # Корректный номер счета с префиксом
-    ("123456789987654321", "**************4321"),  # Длинный корректный номер счета
+    ("1234", "**1234"),  # Слишком короткий номер счета
+    ("12345", "**2345"),  # Корректный номер счета
+    ("Account 12345", "Account **2345"),  # Корректный номер счета с префиксом
+    ("123456789987654321", "**4321"),  # Длинный корректный номер счета
 ])
-def test_mask_account_number_invalid_format(account_number, expected):
+def test_mask_account_number(account_number, expected):
     assert mask_account_number(account_number) == expected
 
 # Тесты для функции mask_card_number

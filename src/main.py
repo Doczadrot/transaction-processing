@@ -28,7 +28,6 @@ def mask_card_number(card_info):
     card = f"{card_info} {blocks_str}"
     return card
 
-
 def mask_account_number(account_number):
     digits = get_digits(account_number)
     if len(digits) < 4:
@@ -46,13 +45,22 @@ def format_date(date_str):
     except ValueError:
         return "N/A"
 
-def process_transactions(file_path):
+def load_transactions(file_path):
+    """Загружает транзакции из JSON файла"""
     with open(file_path, 'r', encoding='utf-8') as file:
         data = json.load(file)
+    return data
 
-    executed_transactions = [t for t in data if t.get('state') == 'EXECUTED']
+def sort_transactions(transactions):
+    """Сортирует транзакции по дате в обратном порядке и возвращает первые 5"""
+    executed_transactions = [t for t in transactions if t.get('state') == 'EXECUTED']
     sorted_transactions = sorted(executed_transactions,
                                  key=lambda t: datetime.strptime(t.get('date'), '%Y-%m-%dT%H:%M:%S.%f'), reverse=True)[:5]
+    return sorted_transactions
+
+def process_transactions(file_path):
+    transactions = load_transactions(file_path)
+    sorted_transactions = sort_transactions(transactions)
 
     for transaction in sorted_transactions:
         date = format_date(transaction.get('date'))

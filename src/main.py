@@ -3,34 +3,33 @@ from datetime import datetime
 import re
 
 def get_digits(info):
-    """returns digits from sting"""
-    mask = re.compile(r"\d+") # регулярка для цифр в строке
-    digits = "".join(mask.findall(info)) # применяем регулярку и ищем все цифры в строке
+    """returns digits from string"""
+    mask = re.compile(r"\d+")
+    digits = "".join(mask.findall(info))
     return digits.strip()
 
 def clean_up_digits(info):
     """remove all digits from the string"""
-    for i in range(10): # удаляем все цифры из строки с card_info
+    for i in range(10):
         info = info.replace(str(i), "")
     return info.strip()
 
 def mask_card_number(card_info):
     digits = get_digits(card_info)
-    if len(digits) < 12: # дропаем слишком короткие карточки
+    if len(digits) < 12:
         return "N/A"
     card_info = clean_up_digits(card_info)
-    blocks = [digits[i:i+4] for i in range(0, len(digits), 4)] # разделяем цифры на группы по 4, хз, по идеи номер карточки тоже должен быть кратным 4, но ни в тестах, ни в тз об этом не сказано
+    blocks = [digits[i:i+4] for i in range(0, len(digits), 4)]
 
-    blocks[1] = blocks[1][:2]+"**" # закрываем вторую четвурку чисел
-    for i in range(2, len(blocks)-1): # заменяем блоки со второго по предпоследний звездочками
+    blocks[1] = blocks[1][:2]+"**"
+    for i in range(2, len(blocks)-1):
         blocks[i] = "****"
-    blocks_str = " ".join(blocks) # соединяем в строку все цифры
+    blocks_str = " ".join(blocks)
     card = f"{card_info} {blocks_str}"
     return card
 
 
 def mask_account_number(account_number):
-    # Проверяем, что номер счета не является пустой строкой, его длина больше или равна 4, и он содержит только цифры
     digits = get_digits(account_number)
     if len(digits) < 4:
         return "N/A"
@@ -41,7 +40,6 @@ def mask_account_number(account_number):
     return masked_number
 
 def format_date(date_str):
-    # Попробуем распарсить дату, если возможно
     try:
         date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%f')
         return date.strftime('%d.%m.%Y')
@@ -52,7 +50,6 @@ def process_transactions(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         data = json.load(file)
 
-    # Фильтрация и сортировка транзакций
     executed_transactions = [t for t in data if t.get('state') == 'EXECUTED']
     sorted_transactions = sorted(executed_transactions,
                                  key=lambda t: datetime.strptime(t.get('date'), '%Y-%m-%dT%H:%M:%S.%f'), reverse=True)[:5]
@@ -65,15 +62,13 @@ def process_transactions(file_path):
         amount = transaction.get('operationAmount', {}).get('amount', "N/A")
         currency = transaction.get('operationAmount', {}).get('currency', {}).get('name', "N/A")
 
-        # Маскировка номеров счетов и карт
         masked_from_account = mask_card_number(from_account) if from_account else "N/A"
         masked_to_account = mask_account_number(to_account) if to_account else "N/A"
 
-        # Вывод транзакции
         print(f"{date} {description}")
         print(f"{masked_from_account} -> {masked_to_account}")
         print(f"{amount} {currency}")
-        print()  # Пустая строка для разделения операций
+        print()
 
 if __name__ == "__main__":
     file_path = "operations.json"

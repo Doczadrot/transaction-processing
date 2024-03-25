@@ -13,7 +13,6 @@ def test_mask_account_number(account_number, expected):
     assert mask_account_number(account_number) == expected
 
 # Тесты для функции mask_card_number
-
 @pytest.mark.parametrize("card_info, expected_masked_number", [
     ("Visa 1234567812345678", "Visa 1234 56** **** 5678"),  # Корректная Visa карта
     ("MasterCard 9876543210987654", "MasterCard 9876 54** **** 7654"),  # Корректная MasterCard карта
@@ -24,7 +23,6 @@ def test_mask_card_number(card_info, expected_masked_number):
     assert mask_card_number(card_info) == expected_masked_number
 
 # Тесты для функции format_date
-
 @pytest.mark.parametrize("date_str, expected_formatted_date", [
     ("2023-12-31T23:59:59.999", "31.12.2023"),  # Корректная дата и время
     ("2024-03-15T12:30:00.000", "15.03.2024"),  # Корректная дата и время
@@ -33,7 +31,6 @@ def test_format_date(date_str, expected_formatted_date):
     assert format_date(date_str) == expected_formatted_date
 
 # Тесты для функции get_digits
-
 @pytest.mark.parametrize("info, expected_info", [
     ("", ""),  # Пустая строка
     ("abc", ""),  # Строка только с буквами
@@ -46,7 +43,6 @@ def test_get_digits(info, expected_info):
     assert get_digits(info) == expected_info
 
 # Тесты для функции clean_up_digits
-
 @pytest.mark.parametrize("info, expected_info", [
     ("", ""),  # Пустая строка
     ("124", ""),  # Строка только с цифрами
